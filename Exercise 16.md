@@ -34,17 +34,43 @@ Create a query to identify all available cycles.
 Решение/ Solution:
 --
 ```SQL
-SELECT *
-FROM (SELECT PRO_I.PRODUCT_STATUS, SUM(ORD_I.UNIT_PRICE * ORD_I.QUANTITY) SUM_QUANT,
-      CUST.GENDER||' '||CUST.MARITAL_STATUS G_M_S
-      FROM OE.CUSTOMERS CUST JOIN OE.ORDERS ORD
-      ON ORD.CUSTOMER_ID = CUST.CUSTOMER_ID JOIN OE.ORDER_ITEMS ORD_I
-      ON ORD.ORDER_ID = ORD_I.ORDER_ID JOIN OE.PRODUCT_INFORMATION PRO_I
-      ON ORD_I.PRODUCT_ID = PRO_I.PRODUCT_ID
-      GROUP BY PRO_I.PRODUCT_STATUS, CUST.GENDER||' '||CUST.MARITAL_STATUS)
-PIVOT(SUM(SUM_QUANT) FOR G_M_S IN
-      ('M married' AS "женат",
-       'M single' AS "не женат",
-       'F married' AS "замужем",
-       'F single' AS "не замужем"))
-ORDER BY PRODUCT_STATUS;
+WITH TAB AS(SELECT 'a,b -> c,d' STR FROM DUAL
+            UNION ALL 
+            SELECT 'b,d -> a' FROM DUAL
+            UNION ALL 
+            SELECT 'c -> b,d' FROM DUAL
+            UNION ALL 
+            SELECT 'd -> a,c,e,f' FROM DUAL
+            UNION ALL 
+            SELECT 'f -> g' FROM DUAL
+            UNION ALL 
+            SELECT 'g -> h' FROM DUAL
+            UNION ALL 
+            SELECT 'd,h -> f' FROM DUAL),
+ 
+   PARS1 AS(SELECT RTRIM(REGEXP_SUBSTR(STR, '(.+ -> )',1),' -> ')S1, 
+            LTRIM(REGEXP_SUBSTR(STR, '( .+)',1),' -> ')S2, STR
+            FROM TAB)  --SELECT * FROM PARS1;
+            ,
+            
+   PARS2 AS(SELECT DISTINCT REGEXP_SUBSTR(S1,'[^,]+',1, LEVEL) R1, STR FROM PARS1
+            CONNECT BY LEVEL <= REGEXP_COUNT(S1,',')+1) --SELECT * FROM PARS2;
+            ,            
+   PARS3 AS(SELECT DISTINCT REGEXP_SUBSTR(S2,'[^,]+',1, LEVEL) R2, STR FROM PARS1
+            CONNECT BY LEVEL <= REGEXP_COUNT(S2,',')+1) --SELECT * FROM PARS3;
+            ,              
+   A_PARS AS(SELECT STR, R1, R2 FROM PARS2 NATURAL JOIN PARS3
+             UNION ALL
+             SELECT STR, NULL, R1 FROM PARS2) --SELECT * FROM A_PARS;
+             ,
+ CONEC_L AS(SELECT DISTINCT R1,R2,SYS_CONNECT_BY_PATH(R2,'->') SYS_CON, CONNECT_BY_ROOT(R2) ROOT, CONNECT_BY_ISCYCLE
+            FROM A_PARS
+            WHERE CONNECT_BY_ISCYCLE =1
+            START WITH R1 IS NULL --IN(SELECT DISTINCT R1 FROM A_PARS)
+            CONNECT BY NOCYCLE R1 = PRIOR R2
+            ORDER BY 3,2)  --SELECT * FROM CONEC_L;
+      
+SELECT DISTINCT /*CN.R1, CN.ROOT, CN.R2,*/ LTRIM(CN.SYS_CON||'->'||AP.R2,'->') "CYCLE"
+FROM CONEC_L CN JOIN A_PARS AP
+ON CN.R2 = AP.R1
+WHERE AP.R2 = CN.ROOT;
