@@ -43,7 +43,7 @@ under development  |   	9012    	|34567,8   |  	9012 |    	456,7
 
 Решение/ Solution:
 --
-```
+```SQL
 SELECT *
 FROM (SELECT PRO_I.PRODUCT_STATUS, SUM(ORD_I.UNIT_PRICE * ORD_I.QUANTITY) SUM_QUANT,
       CUST.GENDER||' '||CUST.MARITAL_STATUS G_M_S
