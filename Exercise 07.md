@@ -23,7 +23,7 @@ Create a query to determine information on employees, based on the region and th
 
 Решение/ Solution:
 --
-```
+```SQL
 WITH TAB1 AS(SELECT SUBSTR(EMP.PHONE_NUMBER,1,3) PHONE, EMP.SALARY, DEP.DEPARTMENT_ID,
              REG.REGION_ID, REG.REGION_NAME, LOC.CITY
              FROM EMPLOYEES EMP LEFT JOIN DEPARTMENTS DEP
