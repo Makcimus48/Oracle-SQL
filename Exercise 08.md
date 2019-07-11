@@ -8,7 +8,7 @@ The buyer has denominations of A (1), ..., A (n) denominations, and the seller h
 
 Решение/ Solution:
 --
-```
+```SQL
 DEFINE BUYER = '&DATA'
 DEFINE SALER = '&DATA'
 
