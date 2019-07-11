@@ -24,7 +24,7 @@ The result is sorted in ascending order by columns 1 and 2 listed above. The tab
   
 Решение/ Solution:
 --
-```
+```SQL
 DROP TABLE B;
 DROP TABLE A;
   CREATE TABLE A (A1 NUMBER(2), A2 NUMBER(2), A3 NUMBER(2), CONSTRAINT PK_A PRIMARY KEY
