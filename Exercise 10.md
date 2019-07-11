@@ -17,7 +17,7 @@ Display statistics on sales agents:
 
 Решение/ Solution:
 --
-```
+```SQL
 SELECT LAST_NAME, FIRST_NAME, TOTAL_ORD, 
        ROUND(RATIO_TO_REPORT(TOTAL_ORD) OVER () * 100, 2)||'%' PERCENT_S
 FROM (SELECT EMP.EMPLOYEE_ID, EMP.LAST_NAME,EMP.FIRST_NAME, 
