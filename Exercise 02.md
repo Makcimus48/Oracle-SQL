@@ -8,7 +8,7 @@ Print the department name and the names of the employees with the minimum salary
 
 Решение/ Solution:
 --
-```
+```SQL
 --Находим мин оклады по отделу
 WITH DOP AS (SELECT MIN(SALARY) M_S, DEPARTMENT_ID D_I
               FROM EMPLOYEES
