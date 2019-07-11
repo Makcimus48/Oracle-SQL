@@ -22,7 +22,7 @@ Weiss              |       	8	|8
 
 Решение/ Solution:
 --
-```
+```SQL
 SELECT LAST_NAME,
       (SELECT COUNT(*)-1
        FROM EMPLOYEES EMP2
