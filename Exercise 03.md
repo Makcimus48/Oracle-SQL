@@ -52,7 +52,7 @@ ST_CLERK      |2211 | McLaughlin, Philling
 
 Решение/ Solution:
 --
-```
+```SQL
 WITH T AS (SELECT JOB_ID, SALARY, LAST_NAME,
            ROW_NUMBER() OVER (PARTITION BY JOB_ID, SALARY ORDER BY JOB_ID, SALARY) RN
            FROM EMPLOYEES ORDER BY 1,3),
