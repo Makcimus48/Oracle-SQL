@@ -8,7 +8,7 @@ Print the calendar for the current month (2 digits of the month month (in Englis
 
 Решение/ Solution:
 --
-```
+```SQL
 SELECT TO_CHAR(TRUNC(SYSDATE,'MM')+LEVEL - 1,
 'DD fmMONTH RRRR day','NLS_DATE_LANGUAGE=AMERICAN') "Календарь"
 FROM DUAL
